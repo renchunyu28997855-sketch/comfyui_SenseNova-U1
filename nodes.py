@@ -99,7 +99,8 @@ try:
     else:
         CHECKPOINT_OPTIONS = []
     # get_filename_list returns file names from models/loras, filter .safetensors
-    LORA_OPTIONS = sorted([
+    # Add empty option at start to allow skipping LoRA
+    LORA_OPTIONS = [""] + sorted([
         f for f in folder_paths.get_filename_list("loras")
         if f.endswith(".safetensors")
     ])
@@ -396,17 +397,17 @@ class SenseNovaU1LocalLoader:
         return {
             "required": {
                 "model_path": (
-                    (CHECKPOINT_OPTIONS if CHECKPOINT_OPTIONS else ["sensenova/SenseNova-U1-8B-MoT"]),
+                    "STRING",
                     {
-                        "default": CHECKPOINT_OPTIONS[0] if CHECKPOINT_OPTIONS else "sensenova/SenseNova-U1-8B-MoT",
-                        "tooltip": "Select a checkpoint from models/checkpoints.",
+                        "default": "sensenova/SenseNova-U1-8B-MoT",
+                        "tooltip": "HuggingFace model ID or local path (e.g. sensenova/SenseNova-U1-8B-MoT or /path/to/model).",
                     },
                 ),
                 "lora_path": (
-                    (LORA_OPTIONS if LORA_OPTIONS else []),
+                    "STRING",
                     {
                         "default": "",
-                        "tooltip": "Select a LoRA from models/loras (.safetensors). Leave empty to skip.",
+                        "tooltip": "LoRA file path or HuggingFace ID (.safetensors). Leave empty to skip.",
                     },
                 ),
                 "device": ("STRING", {"default": "cuda"}),
